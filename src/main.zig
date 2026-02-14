@@ -11,7 +11,7 @@ pub fn main() !void {
     defer std.process.argsFree(allocator, args_z);
 
     const cfg = try cli.parseArgs(args_z);
-    if (cfg.help or args_z.len == 1) {
+    if (cfg.help) {
         std.debug.print(
             \\Usage:
             \\  tcp-proxy [--help] [--listen <port>] [--target <host>] [--buf <n>] [--dump-dir <path>] [--no-stdout] [--timestamps]
@@ -35,8 +35,7 @@ pub fn main() !void {
         std.debug.print("buf=(null)\n", .{});
     }
 
-    const port = cfg.listen orelse 8080;
-    var tcp_server = try server.Server.init(allocator, port);
+    var tcp_server = try server.Server.init(allocator, cfg.listen);
     tcp_server.run() catch |err| {
         std.debug.print("Error while trying to init TCP server: {any}\n", .{@errorName(err)});
     };

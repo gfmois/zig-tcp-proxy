@@ -5,8 +5,8 @@ pub const Server = struct {
     address: std.net.Address,
     listener: std.net.Server,
 
-    pub fn init(allocator: std.mem.Allocator, port: u16) !Server {
-        const addr = try std.net.Address.parseIp("127.0.0.1", port);
+    pub fn init(allocator: std.mem.Allocator, port: ?u16) !Server {
+        const addr = try std.net.Address.parseIp("127.0.0.1", port orelse 8080);
         const srv = try addr.listen(.{ .reuse_address = true });
         return .{ .allocator = allocator, .address = addr, .listener = srv };
     }
